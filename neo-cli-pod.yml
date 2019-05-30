@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: neo-cli
+  labels:
+    app: web
+spec:
+  containers:
+    - name: neo-cli
+      image: kizzx2/neo-cli:testnet
+      tty: true
+      stdin: true
+      ports:
+        - containerPort: 10332
+        - containerPort: 20332
+      volumeMounts:
+        - name: neo-cli
+          mountPath: /neo-cli/Chain
+  volumes:
+    - name: neo-cli
+      persistentVolumeClaim:
+        claimName: neo-cli-vol-cla
+
+
+# kubectl create namespace neo-cli
+
+# kubectl apply -f /home/anderson/pods/neo-cli-pod.yml --namespace=neo-cli
+
+# kubectl get all --all-namespaces -> list everything
+
+# kubectl describe pod neo-cli --namespace=neo-cli 
+
+# kubectl --namespace=neo-cli get pods
+
+# kubectl -n kube-system logs -f neo-cli --namespace=neo-cli 
+
+# install this: sudo apt-get install socat
+# kubectl port-forward neo-cli 20332:20332 --namespace=neo-cli 
+# kubectl port-forward neo-cli 10332:10332 --namespace=neo-cli 
+
+# kubectl delete pods neo-cli --namespace=neo-cli
+
+# kubectl exec --namespace=neo-cli -it neo-cli -- /bin/bash

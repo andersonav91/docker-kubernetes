@@ -1,0 +1,47 @@
+FROM centos
+
+RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc \
+	&& sh -c 'echo -e "[packages-microsoft-com-prod]\nname=packages-microsoft-com-prod \nbaseurl= https://packages.microsoft.com/yumrepos/microsoft-rhel7.3-prod\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/dotnetdev.repo' \
+	&& yum -y install libunwind libicu \
+	&& yum -y install dotnet-sdk-2.2
+
+RUN yum -y install epel-release \
+	&& yum -y install leveldb-devel \
+	&& yum -y install  git
+
+RUN cd /home/ \
+	&& git clone https://github.com/neo-project/neo-cli.git \
+	&& cd neo-cli/neo-cli \
+	&& dotnet restore \
+	&& dotnet publish -c Release \
+	&& ls -lhsa /home/neo-cli/neo-cli/bin/Release/netcoreapp2.1 \
+	&& cp -r /home/neo-cli/neo-cli/bin/Release/netcoreapp2.1/publish/ /home/cli/
+
+RUN cd /home/cli/ \
+	&& rm -f config.json \
+	&& cp config.testnet.json config.json \
+	&& rm -f protocol.json \
+	&& cp protocol.testnet.json protocol.json
+
+VOLUME /home/cli
+
+EXPOSE 20333
+WORKDIR  /home/cli
+
+# 1 how to build the image
+# docker build -t neo/neo-cli-testnet:v1 .
+
+# 2 create container
+# docker run -p 20332:20332 --name neo-cli neo/neo-cli-testnet:v1
+# docker run -it -d -p 20332:20332 --name neo-cli neo/neo-cli-testnet:v1 /bin/bash
+# docker exec -it neo-cli sh
+
+# 3 start neo cli 
+# cd /home/cli && dotnet neo-cli.dll /rpc
+# [Ctrl]+[p]+[q] to exit container with not stop
+
+# 4 verify rpc
+# http://127.0.0.1:20332 -> testnet, http://127.0.0.1:10332 -> mainnet
+
+# list volumes
+# docker volume ls

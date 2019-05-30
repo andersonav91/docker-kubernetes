@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: neo-cli-vol
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi #Size of the volume
+  accessModes:
+    - ReadWriteOnce #type of access
+  hostPath:
+    path: "/home/anderson/neo-cli" #host location
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: neo-cli-vol-cla
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+
+# kubectl apply -f /home/anderson/pods/neo-cli-volume.yml --namespace=neo-cli
+
+# kubectl get pvc --namespace=neo-cli
+
+# kubectl get pv --namespace=neo-cli
+
+# kubectl delete pvc neo-cli-vol-cla --namespace=neo-cli
+# kubectl delete pvc neo-cli-vol --namespace=neo-cli
