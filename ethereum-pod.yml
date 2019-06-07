@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ethereum
+  labels:
+    app: web
+spec:
+  containers:
+    - name: ethereum
+      image: kunstmaan/ethereum-geth-testnet:latest
+      tty: true
+      stdin: true
+      ports:
+        - containerPort: 8545
+        - containerPort: 30303
+      volumeMounts:
+        - name: ethereum
+          mountPath: /data
+  volumes:
+    - name: ethereum
+      persistentVolumeClaim:
+        claimName: ethereum-vol-cla
+
+
+# kubectl create namespace ethereum
+
+# kubectl apply -f /home/anderson/pods/ethereum-pod.yml --namespace=ethereum
+
+# kubectl get all --all-namespaces -> list everything
+
+# kubectl describe pod ethereum --namespace=ethereum 
+
+# kubectl --namespace=ethereum get pods
+
+# kubectl -n kube-system logs -f ethereum --namespace=ethereum 
+
+# install this: sudo apt-get install socat
+# kubectl port-forward ethereum 8545:8545 --namespace=ethereum 
+# kubectl port-forward ethereum 30303:30303 --namespace=ethereum 
+
+# kubectl delete pods ethereum --namespace=ethereum
+
+# kubectl exec --namespace=ethereum -it ethereum -- /bin/bash
+
+# kubectl exec -it ethereum --namespace=ethereum -- ethereum -testnet
+
+# kubectl exec -it ethereum --namespace=ethereum -- sh
