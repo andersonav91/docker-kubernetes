@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: blockchain-test
+  labels:
+    app: web
+spec:
+  containers:
+    - name: blockchain-test
+      image: andersonav91/blockchain-test:v1
+      tty: true
+      stdin: true
+      ports:
+        - containerPort: 3000
+      env:
+      - name: BITCOIN_RPC_URL
+        value: "http://localhost:18332"
+      - name: BITCOIN_RPC_PASS
+        value: "password"
+      - name: BITCOIN_RPC_USER
+        value: "bitcoin"
+      - name: ETHEREUM_RPC_URL
+        value: "http://localhost:8545"
+      - name: NEO_RPC_URL
+        value: "http://localhost:8545"
+
+# kubectl create namespace blockchain-test
+
+# kubectl apply -f /home/anderson/pods/blockchain-test-pod.yml --namespace=blockchain-test
+
+# kubectl get all --all-namespaces -> list everything
+
+# kubectl describe pod blockchain-test --namespace=blockchain-test 
+
+# kubectl --namespace=blockchain-test get pods
+
+# kubectl -n kube-system logs -f blockchain-test --namespace=blockchain-test 
+
+# install this: sudo apt-get install socat
+# kubectl port-forward blockchain-test  3000:3000 --namespace=blockchain-test 
+
+# kubectl delete pods blockchain-test  --namespace=blockchain-test 
+
+# kubectl exec --namespace=blockchain-test  -it blockchain-test  -- /bin/bash
+
+# kubectl exec -it blockchain-test  --namespace=blockchain-test  -- blockchain-test 
+
+# kubectl exec -it blockchain-test  --namespace=blockchain-test  -- sh
