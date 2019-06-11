@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rabbit-mq
+  labels:
+    app: web
+spec:
+  containers:
+    - name: rabbit-mq
+      image: andersonav91/rabbit-mq:v1
+      tty: true
+      stdin: true
+      ports:
+        - containerPort: 4369
+        - containerPort: 15671
+        - containerPort: 5671
+      env:
+      - name: RABBITMQ_DEFAULT_USER
+        value: "user"
+      - name: RABBITMQ_DEFAULT_PASS
+        value: "password"
+
+# kubectl create namespace rabbit-mq
+
+# kubectl apply -f /home/anderson/pods/rabbit-mq-pod.yml --namespace=rabbit-mq
+
+# kubectl get all --all-namespaces -> list everything
+
+# kubectl describe pod rabbit-mq --namespace=rabbit-mq 
+
+# kubectl --namespace=rabbit-mq get pods
+
+# kubectl -n kube-system logs -f rabbit-mq --namespace=rabbit-mq 
+
+# install this: sudo apt-get install socat
+# kubectl port-forward rabbit-mq  3000:3000 --namespace=rabbit-mq 
+
+# kubectl delete pods rabbit-mq  --namespace=rabbit-mq 
+
+# kubectl exec --namespace=rabbit-mq  -it rabbit-mq  -- /bin/bash
+
+# kubectl exec -it rabbit-mq --namespace=rabbit-mq  -- rabbit-mq 
+
+# kubectl exec -it rabbit-mq --namespace=rabbit-mq  -- sh
