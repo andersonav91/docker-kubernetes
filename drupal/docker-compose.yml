@@ -1,0 +1,66 @@
+version: '3'
+
+services:
+  # Database
+  db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: drupal
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    networks:
+      - drupalsite
+  # phpmyadmin
+  phpmyadmin:
+    depends_on:
+      - db
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '8080:80'
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    networks:
+      - drupalsite
+  # php - apache - drupal
+  backend:
+    depends_on:
+      - db
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - '80:80'
+      - '9000:9000'
+    environment:
+      EXAMPLE: db
+    networks:
+      - drupalsite
+    working_dir: /var/www/html/drupal
+    volumes:
+      - .:/var/www/html/drupal
+networks:
+  drupalsite:
+volumes:
+  db_data:
+
+
+# phpmyadmin user: root, password: password
+
+# sudo docker-compose up
+# sudo docker-compose down
+
+# if have problems with database delete the volume with
+# sudo docker system prune --force --volumes
+
+# puts in the drupal installation for the db config => host: db, user: user, password: password, database: drupal
