@@ -25,3 +25,11 @@ RUN echo "xdebug.remote_enable=1" >> /usr/local/etc/php/php.ini
 RUN mkdir /var/www/html/drupal
 
 RUN ls -lhsa /var/www/html
+
+#Uncomment the nexts lines if you need to import the backup.sql file 
+
+#RUN chmod +x /var/www/html/drupal/docker-entrypoint.sh
+#RUN chmod 755 /var/www/html/drupal/docker-entrypoint.sh
+
+#ENTRYPOINT ["/var/www/html/drupal/docker-entrypoint.sh"]
+#ENTRYPOINT ["docker-entrypoint.sh"]

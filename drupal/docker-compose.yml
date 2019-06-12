@@ -63,4 +63,16 @@ volumes:
 # if have problems with database delete the volume with
 # sudo docker system prune --force --volumes
 
-# puts in the drupal installation for the db config => host: db, user: user, password: password, database: drupal
+# puts in the drupal installation host: db, user: user, password: password, database: drupal
+
+# delete all info
+
+# sudo docker-compose down
+# sudo docker rmi $(sudo docker images -q) -f
+
+# for import database from sql file:
+
+# sudo docker ps => get id of the mysql container
+# sudo docker cp backup.sql containerId:/tmp/backup.sql
+# sudo docker exec -it containerId /bin/bash
+# mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" < /tmp/backup.sql
