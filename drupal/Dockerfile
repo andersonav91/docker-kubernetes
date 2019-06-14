@@ -6,6 +6,8 @@ RUN apt-get update && \
     apt-get install -y \
         zlib1g-dev 
 
+RUN a2enmod rewrite
+
 RUN docker-php-ext-install mbstring
 
 RUN docker-php-ext-install zip
@@ -22,7 +24,10 @@ RUN echo 'xdebug.remote_connect_back=1' >> /usr/local/etc/php/php.ini
 RUN echo 'xdebug.remote_port=9000' >> /usr/local/etc/php/php.ini
 RUN echo "xdebug.remote_enable=1" >> /usr/local/etc/php/php.ini
 
-RUN mkdir /var/www/html/drupal
+RUN echo "log_errors = On" >> /usr/local/etc/php/php.ini
+RUN echo "error_reporting = E_ALL" >> /usr/local/etc/php/php.ini
+
+# RUN mkdir /var/www/html/drupal
 
 RUN ls -lhsa /var/www/html
 
