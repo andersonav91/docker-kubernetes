@@ -1,0 +1,54 @@
+version: '3'
+services:
+  node1:
+    build:
+      context: .
+      dockerfile: Dockerfile1
+    container_name: node1
+    hostname: node1
+    volumes: 
+      - /opt/neo-cli-1:/neocli
+    ports:
+      - "10332:10332"
+      - "10333:10333"
+      - "10334:10334"
+    tty: true
+  node2:
+    build:
+      context: .
+      dockerfile: Dockerfile2
+    container_name: node2
+    hostname: node2
+    volumes: 
+      - /opt/neo-cli-2:/neocli
+    ports:
+      - "20332:10332"
+      - "20333:10333"
+      - "20334:10334"
+    tty: true
+  node3:
+    build:
+      context: .
+      dockerfile: Dockerfile3
+    container_name: node3
+    hostname: node3
+    volumes: 
+      - /opt/neo-cli-3:/neocli
+    ports:
+      - "30332:10332"
+      - "30333:10333"
+      - "30334:10334"
+    tty: true
+  node4:
+    build:
+      context: .
+      dockerfile: Dockerfile4
+    container_name: node4
+    hostname: node4
+    volumes: 
+      - /opt/neo-cli-4:/neocli
+    ports:
+      - "40332:10332"
+      - "40333:10333"
+      - "40334:10334"
+    tty: true
