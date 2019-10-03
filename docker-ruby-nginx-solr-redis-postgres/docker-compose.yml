@@ -1,0 +1,81 @@
+# put this contents in a folder called docker, inside the project
+
+version: '3'
+services:
+  solr:
+    image: "solr"
+    entrypoint:
+    - bash
+    - "-c"
+    - "precreate-core erisafire; exec solr -f"
+    ports:
+     - "8983:8983"
+    volumes:
+    - solr:/opt/solr/server/solr/core2
+  db:
+    image: "postgres:11"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgresql:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: "erisafire"
+      POSTGRES_USER: "postgres" 
+      POSTGRES_USER: "postgres" 
+  nginx:
+    ports:
+      - "80:80"
+      - "443:443" 
+    depends_on:
+      - web
+    build:
+      context: '../'
+      dockerfile: docker/Dockerfile-nginx
+    links:
+      - web
+    depends_on:
+      - web
+  web:
+    image: "ruby:2.4.5"
+    command: >
+      bash -c "
+           apt-get update -qq && apt-get install -y build-essential libpq-dev sqlite3 curl && 
+           curl -sL https://deb.nodesource.com/setup_8.x | bash - && 
+           apt-get install nodejs
+           cd /erisafire &&
+           which ruby &&
+           bundle install &&
+           bundle exec rails s -p 3000 -e development -b '0.0.0.0'"
+    volumes:
+      - ~/erisafire:/erisafire
+      - web:/home
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db/erisafire
+      ERISA_EMAIL_FROM: "support@erisafire.com"
+      HOME_SUBDOMAIN: "app"
+      REDIS_URL: redis://redis:6379/erisafire
+      WEBSOLR_URL: http://solr:8983/solr/erisafire
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - solr
+      - redis
+  redis:
+    image: "redis"
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis:/data
+volumes:
+  solr:
+  postgresql:
+  web:
+  redis:
+
+# Restore backup => 
+# sudo docker cp erisafire.backup "$(sudo docker-compose ps -q db)":/erisafire.backup
+# sudo docker-compose exec db pg_restore -U postgres -d erisafire -1 erisafire.backup
+
+# sudo docker cp nginx.conf "$(sudo docker-compose ps -q nginx)":/etc/nginx/nginx.conf
+
