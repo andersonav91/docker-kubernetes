@@ -1,0 +1,9 @@
+version: '3'
+services:
+  angular:
+    image: "jenkins-angular"
+    environment:
+      env: prod
+    ports:
+      - "80:80"
+
